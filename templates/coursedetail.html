@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Course Detail{% endblock %}
+
+{% block content %}
+<!-- back link to home -->
+<a href="/" class="btn btn-secondary btn-sm mb-3">Back</a>
+
+{% if not course %}
+    <div class="alert alert-danger">Course not found.</div>
+{% else %}
+    <!-- basic course information -->
+    <h1>{{ course.coursecode }}</h1>
+    <h2 class="h5 text-muted">{{ course.coursename }}</h2>
+    <p><strong>Department:</strong> {{ course.department }}</p>
+    <p><strong>Professor:</strong> {{ course.professor if course.professor else "N/A" }}</p>
+    <p><strong>Description:</strong> {{ course.description if course.description else "N/A" }}</p>
+
+    <hr>
+    <h3 class="h5">Reviews</h3>
+
+    <!-- show existing reviews -->
+    {% if reviews %}
+        {% for review in reviews %}
+            <div class="border rounded p-3 mb-3">
+                <p class="mb-1"><strong>Overall:</strong> {{ review.overallrating }}/5</p>
+                <p class="mb-1"><strong>Difficulty:</strong> {{ review.difficulty }}/5</p>
+                <p class="mb-1"><strong>Workload:</strong> {{ review.workload }}/5</p>
+                <p class="mb-1"><strong>Interest:</strong> {{ review.interest }}/5</p>
+                <p class="mb-1"><strong>Comment:</strong> {{ review.reviewtext }}</p>
+                <p class="mb-0 text-muted"><small>{{ review.semester if review.semester else "Unknown term" }} | {{ review.dateposted }}</small></p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted">No reviews yet.</p>
+    {% endif %}
+{% endif %}
+{% endblock %}
