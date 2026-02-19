@@ -1,4 +1,7 @@
 import csv
+import hashlib
+import os
+import secrets
 import sqlite3
 
 
@@ -41,12 +44,32 @@ def cleankeys(item):
     return clean
 
 
+def hash_password(password):
+    salt = secrets.token_hex(16)
+    iterations = 200000
+    digest = hashlib.pbkdf2_hmac(
+        "sha256", password.encode("utf-8"), salt.encode("utf-8"), iterations
+    ).hex()
+    return f"pbkdf2_sha256${iterations}${salt}${digest}"
+
+
 def builddatabase():
     con = sqlite3.connect("courses.db")
     cur = con.cursor()
 
     cur.execute("DROP TABLE IF EXISTS reviews")
+    cur.execute("DROP TABLE IF EXISTS users")
     cur.execute("DROP TABLE IF EXISTS courses")
+
+    cur.execute(
+        """
+        CREATE TABLE users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL UNIQUE,
+            passwordhash TEXT NOT NULL
+        )
+        """
+    )
 
     cur.execute(
         """
@@ -143,6 +166,13 @@ def builddatabase():
         VALUES (?, ?, ?, ?, ?)
         """,
         coursebatch,
+    )
+
+    admin_username = os.environ.get("APP_ADMIN_USERNAME", "admin")
+    admin_password = os.environ.get("APP_ADMIN_PASSWORD", "admin123")
+    cur.execute(
+        "INSERT INTO users (username, passwordhash) VALUES (?, ?)",
+        (admin_username, hash_password(admin_password)),
     )
 
     samplereviews = [
@@ -263,6 +293,7 @@ def builddatabase():
     print("=" * 62)
     print(f"Added {len(coursebatch)} courses")
     print(f"Added {len(samplereviews)} sample reviews")
+    print(f"Created login user: {admin_username}")
     print("Top departments:")
     for dept, countvalue in summary[:15]:
         print(f" - {dept}: {countvalue}")

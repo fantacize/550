@@ -8,12 +8,29 @@
 </head>
 <body>
     <nav class="navbar navbar-dark bg-dark">
-        <div class="container">
+        <div class="container d-flex justify-content-between">
             <a class="navbar-brand" href="/">Course Reviews</a>
+            <div class="text-light">
+                {% if currentuser %}
+                    <span class="me-3">Signed in as {{ currentuser.username }}</span>
+                    <form method="post" action="{{ url_for('logout') }}" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-outline-light">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-sm btn-outline-light">Login</a>
+                {% endif %}
+            </div>
         </div>
     </nav>
 
     <main class="container py-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
         {% block content %}{% endblock %}
     </main>
 </body>
