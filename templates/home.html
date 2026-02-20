@@ -3,11 +3,49 @@
 {% block title %}Home - Course Reviews{% endblock %}
 
 {% block content %}
-<!-- page heading -->
 <h1 class="mb-3">All Courses</h1>
-<p class="text-muted">Total courses: {{ courses|length }}</p>
 
-<!-- simple table of all courses -->
+<form method="get" class="row g-3 mb-3">
+    <div class="col-md-4">
+        <label for="search" class="form-label">Search</label>
+        <input id="search" name="search" class="form-control" value="{{ search }}" placeholder="Course name, code, or professor">
+    </div>
+    <div class="col-md-3">
+        <label for="department" class="form-label">Department</label>
+        <select id="department" name="department" class="form-select">
+            <option value="">All departments</option>
+            {% for item in departments %}
+                <option value="{{ item.department }}" {% if department == item.department %}selected{% endif %}>{{ item.department }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label for="level" class="form-label">Course level</label>
+        <select id="level" name="level" class="form-select">
+            <option value="">All levels</option>
+            {% for item in levels %}
+                <option value="{{ item.level }}" {% if level == (item.level|string) %}selected{% endif %}>{{ item.level }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label for="minrating" class="form-label">Min rating</label>
+        <input id="minrating" name="minrating" type="number" step="0.1" min="1" max="5" class="form-control" value="{{ minrating }}" placeholder="1 to 5">
+    </div>
+    <div class="col-md-1 d-flex align-items-end">
+        <button class="btn btn-primary w-100" type="submit">Apply</button>
+    </div>
+    <div class="col-12">
+        <a class="btn btn-outline-secondary btn-sm" href="/">Clear</a>
+    </div>
+</form>
+
+{% if homewarning %}
+    <div class="alert alert-warning">{{ homewarning }}</div>
+{% endif %}
+
+<p class="text-muted">Matched courses: {{ courses|length }}</p>
+
 {% if courses %}
     <div class="table-responsive">
         <table class="table table-striped table-bordered">
@@ -15,8 +53,12 @@
                 <tr>
                     <th>Code</th>
                     <th>Name</th>
+                    <th>Professor</th>
                     <th>Department</th>
-                    <th>Detail</th>
+                    <th>Level</th>
+                    <th>Avg rating</th>
+                    <th>Reviews</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -24,8 +66,16 @@
                     <tr>
                         <td>{{ course.coursecode }}</td>
                         <td>{{ course.coursename }}</td>
+                        <td>{{ course.professor if course.professor else "N/A" }}</td>
                         <td>{{ course.department }}</td>
-                        <td><a class="btn btn-sm btn-primary" href="/course/{{ course.id }}">View</a></td>
+                        <td>{{ course.level if course.level else "N/A" }}</td>
+                        <td>{{ course.avgrating if course.avgrating else "N/A" }}</td>
+                        <td>{{ course.reviewcount }}</td>
+                        <td class="d-flex gap-1">
+                            <a class="btn btn-sm btn-primary" href="/course/{{ course.id }}">View</a>
+                            <a class="btn btn-sm btn-outline-primary" href="/course/{{ course.id }}?mode=review#submitbox">Review</a>
+                            <a class="btn btn-sm btn-outline-secondary" href="/course/{{ course.id }}?mode=rating#submitbox">Rating</a>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>

@@ -3,13 +3,11 @@
 {% block title %}Course Detail{% endblock %}
 
 {% block content %}
-<!-- back link to home -->
 <a href="/" class="btn btn-secondary btn-sm mb-3">Back</a>
 
 {% if not course %}
     <div class="alert alert-danger">Course not found.</div>
 {% else %}
-    <!-- basic course information -->
     <h1>{{ course.coursecode }}</h1>
     <h2 class="h5 text-muted">{{ course.coursename }}</h2>
     <p><strong>Department:</strong> {{ course.department }}</p>
@@ -17,9 +15,59 @@
     <p><strong>Description:</strong> {{ course.description if course.description else "N/A" }}</p>
 
     <hr>
+    <div class="d-flex gap-2 mb-3">
+        <a class="btn btn-outline-primary btn-sm {% if mode == 'review' %}active{% endif %}" href="/course/{{ course.id }}?mode=review#submitbox">Review</a>
+        <a class="btn btn-outline-primary btn-sm {% if mode == 'rating' %}active{% endif %}" href="/course/{{ course.id }}?mode=rating#submitbox">Rating</a>
+    </div>
+    <h3 id="submitbox" class="h5">Add a Review or Rating</h3>
+
+    {% if saved %}
+        <div class="alert alert-success">
+            {% if savetype == "rating" %}
+                Rating saved.
+            {% else %}
+                Review saved.
+            {% endif %}
+        </div>
+    {% endif %}
+    {% if formerror %}
+        <div class="alert alert-danger">{{ formerror }}</div>
+    {% endif %}
+
+    <form method="post" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <label for="overall" class="form-label">Overall</label>
+            <input id="overall" name="overall" type="number" min="1" max="5" class="form-control" value="{{ formvalue.overall }}" required>
+        </div>
+        <div class="col-md-3">
+            <label for="difficulty" class="form-label">Difficulty</label>
+            <input id="difficulty" name="difficulty" type="number" min="1" max="5" class="form-control" value="{{ formvalue.difficulty }}" required>
+        </div>
+        <div class="col-md-3">
+            <label for="workload" class="form-label">Workload</label>
+            <input id="workload" name="workload" type="number" min="1" max="5" class="form-control" value="{{ formvalue.workload }}" required>
+        </div>
+        <div class="col-md-3">
+            <label for="interest" class="form-label">Interest</label>
+            <input id="interest" name="interest" type="number" min="1" max="5" class="form-control" value="{{ formvalue.interest }}" required>
+        </div>
+        <div class="col-md-4">
+            <label for="semester" class="form-label">Semester</label>
+            <input id="semester" name="semester" class="form-control" value="{{ formvalue.semester }}" placeholder="Example: Fall 2026">
+        </div>
+        <div class="col-12">
+            <label for="reviewtext" class="form-label">Review</label>
+            <textarea id="reviewtext" name="reviewtext" rows="4" class="form-control" placeholder="Required for Review button, optional for Rating button.">{{ formvalue.reviewtext }}</textarea>
+        </div>
+        <div class="col-12 d-flex gap-2">
+            <button class="btn btn-primary" type="submit" name="actiontype" value="review">Submit review</button>
+            <button class="btn btn-outline-primary" type="submit" name="actiontype" value="rating">Submit rating</button>
+        </div>
+    </form>
+
+    <hr>
     <h3 class="h5">Reviews</h3>
 
-    <!-- show existing reviews -->
     {% if reviews %}
         {% for review in reviews %}
             <div class="border rounded p-3 mb-3">
