@@ -4,26 +4,27 @@
 
 {% block content %}
 <section class="hero-panel mb-4">
-    <h1 class="mb-2">Statistics and Insights</h1>
-    <p class="mb-0 text-secondary">Quick look at review activity and top rated classes.</p>
+    <div class="hero-eyebrow">Insights</div>
+    <h1 class="hero-title mb-2">Quick snapshots from review activity</h1>
+    <p class="hero-copy mb-0">Track platform activity and see which courses are getting the most attention.</p>
 </section>
 
 <section class="row g-3 mb-4">
     <div class="col-12 col-md-4">
-        <article class="stat-box">
-            <p class="stat-label mb-1">Total Courses</p>
+        <article class="stat-box lift-card">
+            <p class="stat-label mb-1">Total courses</p>
             <p class="stat-value mb-0">{{ totals.totalcourses }}</p>
         </article>
     </div>
     <div class="col-12 col-md-4">
-        <article class="stat-box">
-            <p class="stat-label mb-1">Total Reviews</p>
+        <article class="stat-box lift-card">
+            <p class="stat-label mb-1">Total reviews</p>
             <p class="stat-value mb-0">{{ totals.totalreviews }}</p>
         </article>
     </div>
     <div class="col-12 col-md-4">
-        <article class="stat-box">
-            <p class="stat-label mb-1">Average Overall Rating</p>
+        <article class="stat-box lift-card">
+            <p class="stat-label mb-1">Average overall rating</p>
             <p class="stat-value mb-0">{{ totals.averageoverall if totals.averageoverall else "N/A" }}</p>
         </article>
     </div>
@@ -31,12 +32,12 @@
 
 <section class="row g-4">
     <div class="col-12 col-lg-6">
-        <div class="card h-100">
+        <div class="card h-100 insight-card">
             <div class="card-body">
-                <h2 class="h5 mb-3">Most Reviewed Courses</h2>
+                <h2 class="h5 mb-3">Most reviewed courses</h2>
                 {% if mostreviewed %}
                     <div class="table-responsive">
-                        <table class="table table-sm align-middle">
+                        <table class="table table-sm align-middle leaderboard-table">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -67,13 +68,13 @@
         </div>
     </div>
     <div class="col-12 col-lg-6">
-        <div class="card h-100">
+        <div class="card h-100 insight-card">
             <div class="card-body">
-                <h2 class="h5 mb-3">Highest Rated Courses</h2>
-                <p class="small text-muted">Courses are ranked by average rating.</p>
+                <h2 class="h5 mb-3">Highest rated courses</h2>
+                <p class="small text-muted">Ranked by average rating first, then review count.</p>
                 {% if highestrated %}
                     <div class="table-responsive">
-                        <table class="table table-sm align-middle">
+                        <table class="table table-sm align-middle leaderboard-table">
                             <thead>
                                 <tr>
                                     <th>#</th>

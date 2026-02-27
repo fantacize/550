@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Course Reviews{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700;900&family=DM+Serif+Text:ital@0;1&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark site-nav">
-        <div class="container">
+    <nav class="navbar navbar-expand-lg site-nav-wrap">
+        <div class="container site-nav-shell">
             <a class="navbar-brand site-brand" href="{{ url_for('home') }}">Course Reviews</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -17,40 +20,44 @@
             <div class="collapse navbar-collapse" id="navbarMain">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('home') }}">Courses</a>
+                        <a class="nav-link {% if request.path == url_for('home') %}active{% endif %}" href="{{ url_for('home') }}">Courses</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('stats') }}">Insights</a>
+                        <a class="nav-link {% if request.path == url_for('stats') %}active{% endif %}" href="{{ url_for('stats') }}">Insights</a>
                     </li>
                 </ul>
-                <div class="d-flex align-items-center gap-2">
+                <div class="d-flex align-items-center gap-2 nav-auth-wrap">
                     {% if currentuser %}
-                        <span class="small text-white-50">Signed in: {{ currentuser.username }}</span>
+                        <span class="small nav-user">Signed in: {{ currentuser.username }}</span>
                         <form method="post" action="{{ url_for('logout') }}" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-outline-light">Logout</button>
+                            <button type="submit" class="btn btn-sm btn-outline-light nav-ghost-btn">Logout</button>
                         </form>
                     {% else %}
-                        <a href="{{ url_for('login') }}" class="btn btn-sm btn-outline-light">Login</a>
+                        <a href="{{ url_for('login') }}" class="btn btn-sm nav-ghost-btn">Login</a>
                     {% endif %}
                 </div>
             </div>
         </div>
     </nav>
 
-    <main class="container py-4">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        {% block content %}{% endblock %}
+    <main class="container py-4 app-main">
+        <div class="content-shell">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-stack">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} mb-0">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            {% block content %}{% endblock %}
+        </div>
     </main>
 
     <footer class="site-footer">
         <div class="container py-3">
-            <p class="mb-0 small text-center text-white-50">Student course review project</p>
+            <p class="mb-0 small text-center">Course review project</p>
         </div>
     </footer>
 

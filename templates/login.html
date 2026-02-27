@@ -3,26 +3,31 @@
 {% block title %}Login - Course Reviews{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-12 col-md-7 col-lg-5 col-xl-4">
-        <section class="card p-4 shadow-sm">
-        <h1 class="h3 mb-3">Sign In</h1>
-        <p class="text-muted mb-3">Use your account to manage reviews.</p>
-        {% if error %}
-            <div class="alert alert-danger">{{ error }}</div>
-        {% endif %}
-        <form method="post" action="{{ url_for('login') }}">
-            <div class="mb-3">
-                <label class="form-label" for="username">Username</label>
-                <input class="form-control" id="username" name="username" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label" for="password">Password</label>
-                <input class="form-control" id="password" name="password" type="password" required>
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Login</button>
-        </form>
+<section class="login-shell">
+    <article class="login-aside">
+        <div class="hero-eyebrow">Secure access</div>
+        <h1 class="hero-title mb-2">Sign in to manage your reviews</h1>
+        <p class="hero-copy mb-0">Keep your activity in one place and quickly return to courses you care about.</p>
+    </article>
+    <div class="login-form-wrap">
+        <section class="card login-card p-4 shadow-sm">
+            <h2 class="h4 mb-3">Welcome back</h2>
+            <p class="text-muted mb-3">Use your account to manage reviews.</p>
+            {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+            <form method="post" action="{{ url_for('login') }}">
+                <div class="mb-3">
+                    <label class="form-label" for="username">Username</label>
+                    <input class="form-control" id="username" name="username" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="password">Password</label>
+                    <input class="form-control" id="password" name="password" type="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Login</button>
+            </form>
         </section>
     </div>
-</div>
+</section>
 {% endblock %}

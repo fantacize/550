@@ -3,14 +3,23 @@
 {% block title %}Home - Course Reviews{% endblock %}
 
 {% block content %}
-<section class="hero-panel mb-4">
-    <h1 class="mb-2">Discover and Review Courses</h1>
-    <p class="mb-0 text-secondary">Search classes, compare ratings, and read student feedback before enrolling.</p>
+<section class="hero-panel hero-home mb-4">
+    <div class="hero-eyebrow">Course Finder</div>
+    <h1 class="hero-title mb-2">Find the right class before you register</h1>
+    <p class="hero-copy mb-0">Search by professor, code, and department, then compare ratings and real student feedback.</p>
+    <div class="hero-actions mt-4">
+        <a class="btn btn-primary btn-lg" href="#coursegrid">Explore courses</a>
+        <a class="btn btn-outline-primary btn-lg" href="{{ url_for('stats') }}">View insights</a>
+    </div>
 </section>
 
 <section class="filter-panel mb-4">
-    <form method="get" class="row g-3">
-        <div class="col-12 col-lg-4">
+    <div class="panel-header">
+        <h2 class="h5 mb-1">Filter courses</h2>
+        <p class="mb-0 text-muted">Matched: <strong>{{ courses|length }}</strong></p>
+    </div>
+    <form method="get" class="row g-3 mt-1">
+        <div class="col-12 col-lg-5">
             <label for="search" class="form-label">Search</label>
             <input id="search" name="search" class="form-control" value="{{ search }}" placeholder="Name, code, or professor">
         </div>
@@ -36,10 +45,8 @@
             <label for="minrating" class="form-label">Min rating</label>
             <input id="minrating" name="minrating" type="number" step="0.1" min="1" max="5" class="form-control" value="{{ minrating }}" placeholder="1-5">
         </div>
-        <div class="col-12 col-lg-1 d-grid align-self-end">
+        <div class="col-12 col-lg-12 d-flex flex-wrap gap-2 align-items-end">
             <button class="btn btn-primary" type="submit">Apply</button>
-        </div>
-        <div class="col-12">
             <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('home') }}">Clear filters</a>
         </div>
     </form>
@@ -55,22 +62,22 @@
 </div>
 
 {% if courses %}
-    <div class="row g-3">
+    <div id="coursegrid" class="row g-3">
         {% for course in courses %}
             <div class="col-12 col-md-6 col-xl-4">
-                <article class="course-card p-3">
-                    <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                <article class="course-card p-3 lift-card">
+                    <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
                         <div>
                             <p class="course-code mb-1">{{ course.coursecode }}</p>
                             <h2 class="h6 mb-0">{{ course.coursename }}</h2>
                         </div>
-                        <span class="badge text-bg-light border">{{ course.level if course.level else "N/A" }}</span>
+                        <span class="badge chip">{{ course.level if course.level else "N/A" }}</span>
                     </div>
-                    <p class="small mb-1"><strong>Professor:</strong> {{ course.professor if course.professor else "N/A" }}</p>
-                    <p class="small mb-3"><strong>Department:</strong> {{ course.department }}</p>
-                    <div class="d-flex justify-content-between mb-3">
-                        <span class="small">Avg Rating: <strong>{{ course.avgrating if course.avgrating else "N/A" }}</strong></span>
-                        <span class="small">Reviews: <strong>{{ course.reviewcount }}</strong></span>
+                    <p class="small mb-1 text-muted"><strong>Professor:</strong> {{ course.professor if course.professor else "N/A" }}</p>
+                    <p class="small mb-3 text-muted"><strong>Department:</strong> {{ course.department }}</p>
+                    <div class="score-row mb-3">
+                        <span class="score-pill">Avg {{ course.avgrating if course.avgrating else "N/A" }}</span>
+                        <span class="score-pill">Reviews {{ course.reviewcount }}</span>
                     </div>
                     <div class="d-flex flex-wrap gap-2">
                         <a class="btn btn-sm btn-primary" href="/course/{{ course.id }}">Open</a>
@@ -82,6 +89,9 @@
         {% endfor %}
     </div>
 {% else %}
-    <p class="text-muted">No courses found.</p>
+    <section class="empty-panel">
+        <h2 class="h5 mb-2">No courses found</h2>
+        <p class="mb-0 text-muted">Try widening your search or clearing filters.</p>
+    </section>
 {% endif %}
 {% endblock %}

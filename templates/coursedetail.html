@@ -8,15 +8,17 @@
 {% if not course %}
     <div class="alert alert-danger">Course not found.</div>
 {% else %}
-    <section class="detail-hero mb-4">
+    <section class="detail-hero mb-4 lift-card">
         <p class="detail-code mb-1">{{ course.coursecode }}</p>
         <h1 class="h3 mb-2">{{ course.coursename }}</h1>
-        <p class="mb-1"><strong>Department:</strong> {{ course.department }}</p>
-        <p class="mb-1"><strong>Professor:</strong> {{ course.professor if course.professor else "N/A" }}</p>
-        <p class="mb-0"><strong>Description:</strong> {{ course.description if course.description else "N/A" }}</p>
+        <div class="detail-meta">
+            <span><strong>Department:</strong> {{ course.department }}</span>
+            <span><strong>Professor:</strong> {{ course.professor if course.professor else "N/A" }}</span>
+        </div>
+        <p class="mb-0 mt-3"><strong>Description:</strong> {{ course.description if course.description else "N/A" }}</p>
     </section>
 
-    <section class="card p-3 p-lg-4 mb-4">
+    <section class="card p-3 p-lg-4 mb-4 detail-form-card">
         <div class="d-flex flex-wrap gap-2 mb-3">
             <a class="btn btn-outline-primary btn-sm {% if mode == 'review' %}active{% endif %}" href="/course/{{ course.id }}?mode=review#submitbox">Review mode</a>
             <a class="btn btn-outline-primary btn-sm {% if mode == 'rating' %}active{% endif %}" href="/course/{{ course.id }}?mode=rating#submitbox">Rating mode</a>
@@ -59,7 +61,7 @@
             </div>
             <div class="col-12">
                 <label for="reviewtext" class="form-label">Review text</label>
-                <textarea id="reviewtext" name="reviewtext" rows="4" class="form-control" placeholder="Required for Review mode, optional for Rating mode.">{{ formvalue.reviewtext }}</textarea>
+                <textarea id="reviewtext" name="reviewtext" rows="4" class="form-control" placeholder="Required for review mode, optional for rating mode.">{{ formvalue.reviewtext }}</textarea>
             </div>
             <div class="col-12 d-flex flex-wrap gap-2">
                 <button class="btn btn-primary" type="submit" name="actiontype" value="review">Submit review</button>
@@ -72,12 +74,12 @@
 
     {% if reviews %}
         {% for review in reviews %}
-            <article class="review-item p-3 mb-3">
+            <article class="review-item p-3 mb-3 lift-card">
                 <div class="d-flex flex-wrap gap-2 mb-2">
                     <span class="badge text-bg-primary">Overall {{ review.overallrating }}/5</span>
-                    <span class="badge text-bg-light border">Difficulty {{ review.difficulty }}/5</span>
-                    <span class="badge text-bg-light border">Workload {{ review.workload }}/5</span>
-                    <span class="badge text-bg-light border">Interest {{ review.interest }}/5</span>
+                    <span class="badge chip">Difficulty {{ review.difficulty }}/5</span>
+                    <span class="badge chip">Workload {{ review.workload }}/5</span>
+                    <span class="badge chip">Interest {{ review.interest }}/5</span>
                 </div>
                 <p class="mb-2">{{ review.reviewtext }}</p>
                 <p class="mb-0 text-muted"><small>{{ review.semester if review.semester else "Unknown term" }} | {{ review.dateposted }}</small></p>
