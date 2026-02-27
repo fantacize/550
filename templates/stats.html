@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Insights - Course Reviews{% endblock %}
+
+{% block content %}
+<section class="hero-panel mb-4">
+    <h1 class="mb-2">Statistics and Insights</h1>
+    <p class="mb-0 text-secondary">Quick look at review activity and top rated classes.</p>
+</section>
+
+<section class="row g-3 mb-4">
+    <div class="col-12 col-md-4">
+        <article class="stat-box">
+            <p class="stat-label mb-1">Total Courses</p>
+            <p class="stat-value mb-0">{{ totals.totalcourses }}</p>
+        </article>
+    </div>
+    <div class="col-12 col-md-4">
+        <article class="stat-box">
+            <p class="stat-label mb-1">Total Reviews</p>
+            <p class="stat-value mb-0">{{ totals.totalreviews }}</p>
+        </article>
+    </div>
+    <div class="col-12 col-md-4">
+        <article class="stat-box">
+            <p class="stat-label mb-1">Average Overall Rating</p>
+            <p class="stat-value mb-0">{{ totals.averageoverall if totals.averageoverall else "N/A" }}</p>
+        </article>
+    </div>
+</section>
+
+<section class="row g-4">
+    <div class="col-12 col-lg-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Most Reviewed Courses</h2>
+                {% if mostreviewed %}
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Course</th>
+                                    <th>Reviews</th>
+                                    <th>Avg</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for course in mostreviewed %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>
+                                            <a href="/course/{{ course.id }}">{{ course.coursecode }}</a>
+                                            <div class="small text-muted">{{ course.coursename }}</div>
+                                        </td>
+                                        <td>{{ course.reviewcount }}</td>
+                                        <td>{{ course.avgrating }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted mb-0">No review data yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Highest Rated Courses</h2>
+                <p class="small text-muted">Courses are ranked by average rating.</p>
+                {% if highestrated %}
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Course</th>
+                                    <th>Avg</th>
+                                    <th>Reviews</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for course in highestrated %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>
+                                            <a href="/course/{{ course.id }}">{{ course.coursecode }}</a>
+                                            <div class="small text-muted">{{ course.coursename }}</div>
+                                        </td>
+                                        <td>{{ course.avgrating }}</td>
+                                        <td>{{ course.reviewcount }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted mb-0">Not enough reviews to calculate rankings yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Course Reviews{% endblock %}
+
+{% block content %}
+<section class="hero-panel mb-4">
+    <h1 class="mb-2">Discover and Review Courses</h1>
+    <p class="mb-0 text-secondary">Search classes, compare ratings, and read student feedback before enrolling.</p>
+</section>
+
+<section class="filter-panel mb-4">
+    <form method="get" class="row g-3">
+        <div class="col-12 col-lg-4">
+            <label for="search" class="form-label">Search</label>
+            <input id="search" name="search" class="form-control" value="{{ search }}" placeholder="Name, code, or professor">
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <label for="department" class="form-label">Department</label>
+            <select id="department" name="department" class="form-select">
+                <option value="">All departments</option>
+                {% for item in departments %}
+                    <option value="{{ item.department }}" {% if department == item.department %}selected{% endif %}>{{ item.department }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-6 col-sm-3 col-lg-2">
+            <label for="level" class="form-label">Level</label>
+            <select id="level" name="level" class="form-select">
+                <option value="">All</option>
+                {% for item in levels %}
+                    <option value="{{ item.level }}" {% if level == (item.level|string) %}selected{% endif %}>{{ item.level }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-6 col-sm-3 col-lg-2">
+            <label for="minrating" class="form-label">Min rating</label>
+            <input id="minrating" name="minrating" type="number" step="0.1" min="1" max="5" class="form-control" value="{{ minrating }}" placeholder="1-5">
+        </div>
+        <div class="col-12 col-lg-1 d-grid align-self-end">
+            <button class="btn btn-primary" type="submit">Apply</button>
+        </div>
+        <div class="col-12">
+            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('home') }}">Clear filters</a>
+        </div>
+    </form>
+</section>
+
+{% if homewarning %}
+    <div class="alert alert-warning">{{ homewarning }}</div>
+{% endif %}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+    <p class="text-muted mb-0">Matched courses: {{ courses|length }}</p>
+    <a class="btn btn-outline-primary btn-sm" href="{{ url_for('stats') }}">View insights</a>
+</div>
+
+{% if courses %}
+    <div class="row g-3">
+        {% for course in courses %}
+            <div class="col-12 col-md-6 col-xl-4">
+                <article class="course-card p-3">
+                    <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                        <div>
+                            <p class="course-code mb-1">{{ course.coursecode }}</p>
+                            <h2 class="h6 mb-0">{{ course.coursename }}</h2>
+                        </div>
+                        <span class="badge text-bg-light border">{{ course.level if course.level else "N/A" }}</span>
+                    </div>
+                    <p class="small mb-1"><strong>Professor:</strong> {{ course.professor if course.professor else "N/A" }}</p>
+                    <p class="small mb-3"><strong>Department:</strong> {{ course.department }}</p>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="small">Avg Rating: <strong>{{ course.avgrating if course.avgrating else "N/A" }}</strong></span>
+                        <span class="small">Reviews: <strong>{{ course.reviewcount }}</strong></span>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a class="btn btn-sm btn-primary" href="/course/{{ course.id }}">Open</a>
+                        <a class="btn btn-sm btn-outline-primary" href="/course/{{ course.id }}?mode=review#submitbox">Review</a>
+                        <a class="btn btn-sm btn-outline-secondary" href="/course/{{ course.id }}?mode=rating#submitbox">Rate</a>
+                    </div>
+                </article>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="text-muted">No courses found.</p>
+{% endif %}
+{% endblock %}

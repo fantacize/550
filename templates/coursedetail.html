@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Course Detail{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('home') }}" class="btn btn-outline-secondary btn-sm mb-3">Back to courses</a>
+
+{% if not course %}
+    <div class="alert alert-danger">Course not found.</div>
+{% else %}
+    <section class="detail-hero mb-4">
+        <p class="detail-code mb-1">{{ course.coursecode }}</p>
+        <h1 class="h3 mb-2">{{ course.coursename }}</h1>
+        <p class="mb-1"><strong>Department:</strong> {{ course.department }}</p>
+        <p class="mb-1"><strong>Professor:</strong> {{ course.professor if course.professor else "N/A" }}</p>
+        <p class="mb-0"><strong>Description:</strong> {{ course.description if course.description else "N/A" }}</p>
+    </section>
+
+    <section class="card p-3 p-lg-4 mb-4">
+        <div class="d-flex flex-wrap gap-2 mb-3">
+            <a class="btn btn-outline-primary btn-sm {% if mode == 'review' %}active{% endif %}" href="/course/{{ course.id }}?mode=review#submitbox">Review mode</a>
+            <a class="btn btn-outline-primary btn-sm {% if mode == 'rating' %}active{% endif %}" href="/course/{{ course.id }}?mode=rating#submitbox">Rating mode</a>
+        </div>
+        <h2 id="submitbox" class="h5">Add a review or rating</h2>
+
+        {% if saved %}
+            <div class="alert alert-success">
+                {% if savetype == "rating" %}
+                    Rating saved.
+                {% else %}
+                    Review saved.
+                {% endif %}
+            </div>
+        {% endif %}
+        {% if formerror %}
+            <div class="alert alert-danger">{{ formerror }}</div>
+        {% endif %}
+
+        <form method="post" class="row g-3 mb-0">
+            <div class="col-6 col-md-3">
+                <label for="overall" class="form-label">Overall</label>
+                <input id="overall" name="overall" type="number" min="1" max="5" class="form-control" value="{{ formvalue.overall }}" required>
+            </div>
+            <div class="col-6 col-md-3">
+                <label for="difficulty" class="form-label">Difficulty</label>
+                <input id="difficulty" name="difficulty" type="number" min="1" max="5" class="form-control" value="{{ formvalue.difficulty }}" required>
+            </div>
+            <div class="col-6 col-md-3">
+                <label for="workload" class="form-label">Workload</label>
+                <input id="workload" name="workload" type="number" min="1" max="5" class="form-control" value="{{ formvalue.workload }}" required>
+            </div>
+            <div class="col-6 col-md-3">
+                <label for="interest" class="form-label">Interest</label>
+                <input id="interest" name="interest" type="number" min="1" max="5" class="form-control" value="{{ formvalue.interest }}" required>
+            </div>
+            <div class="col-12 col-md-4">
+                <label for="semester" class="form-label">Semester</label>
+                <input id="semester" name="semester" class="form-control" value="{{ formvalue.semester }}" placeholder="Example: Fall 2026">
+            </div>
+            <div class="col-12">
+                <label for="reviewtext" class="form-label">Review text</label>
+                <textarea id="reviewtext" name="reviewtext" rows="4" class="form-control" placeholder="Required for Review mode, optional for Rating mode.">{{ formvalue.reviewtext }}</textarea>
+            </div>
+            <div class="col-12 d-flex flex-wrap gap-2">
+                <button class="btn btn-primary" type="submit" name="actiontype" value="review">Submit review</button>
+                <button class="btn btn-outline-primary" type="submit" name="actiontype" value="rating">Submit rating</button>
+            </div>
+        </form>
+    </section>
+
+    <h3 class="h5 mb-3">Recent reviews</h3>
+
+    {% if reviews %}
+        {% for review in reviews %}
+            <article class="review-item p-3 mb-3">
+                <div class="d-flex flex-wrap gap-2 mb-2">
+                    <span class="badge text-bg-primary">Overall {{ review.overallrating }}/5</span>
+                    <span class="badge text-bg-light border">Difficulty {{ review.difficulty }}/5</span>
+                    <span class="badge text-bg-light border">Workload {{ review.workload }}/5</span>
+                    <span class="badge text-bg-light border">Interest {{ review.interest }}/5</span>
+                </div>
+                <p class="mb-2">{{ review.reviewtext }}</p>
+                <p class="mb-0 text-muted"><small>{{ review.semester if review.semester else "Unknown term" }} | {{ review.dateposted }}</small></p>
+            </article>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted">No reviews yet.</p>
+    {% endif %}
+{% endif %}
+{% endblock %}
