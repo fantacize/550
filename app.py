@@ -1,3 +1,53 @@
+"""
+Name: neil wang
+Date: 2/26/26
+
+Honor Code:
+on my honor I have not received or given any unauthorized aid
+
+Reflection:
+I am most proud of building form handling and search features that feel practical and reliable. Setting up filters for course name, code, professor, department, level, and minimum rating made the app much more useful, and I liked seeing how those backend queries turned into clear results on the page. I am also proud of integrating AI support to help aggregate course data, because it saved a huge amount of manual work and made the overall system more complete.
+
+The biggest thing I learned is how important iteration and validation are in full-stack projects. Even when the interface looks correct, server-side checks and careful query logic are still necessary to prevent broken behavior and confusing results. Working through bugs across routes, templates, and database logic taught me to test in smaller steps, debug more methodically, and make changes with better structure and consistency.
+
+
+Sources Used:
+1. https://docs.python.org/3/
+2. https://docs.python.org/3/library/sqlite3.html
+3. https://docs.python.org/3/library/hashlib.html
+4. https://docs.python.org/3/library/os.html
+5. https://peps.python.org/pep-0008/
+6. https://flask.palletsprojects.com/
+7. https://flask.palletsprojects.com/en/stable/quickstart/
+8. https://flask.palletsprojects.com/en/stable/api/
+9. https://flask.palletsprojects.com/en/stable/templating/
+10. https://flask.palletsprojects.com/en/stable/patterns/sqlite3/
+11. https://jinja.palletsprojects.com/
+12. https://jinja.palletsprojects.com/en/stable/templates/
+13. https://sqlite.org/docs.html
+14. https://sqlite.org/lang.html
+15. https://sqlite.org/lang_createtable.html
+16. https://sqlite.org/lang_select.html
+17. https://sqlite.org/lang_insert.html
+18. https://sqlite.org/lang_update.html
+19. https://sqlite.org/lang_delete.html
+20. https://sqlite.org/lang_expr.html
+21. https://sqlite.org/foreignkeys.html
+22. https://sqlite.org/lang_datefunc.html
+23. https://sqlite.org/faq.html
+24. https://www.sqlitetutorial.net/
+25. https://www.sqlitetutorial.net/sqlite-python/
+26. https://developer.mozilla.org/en-US/docs/Web/HTML
+27. https://developer.mozilla.org/en-US/docs/Web/CSS
+28. https://developer.mozilla.org/en-US/docs/Web/JavaScript
+29. https://developer.mozilla.org/en-US/docs/Learn/Server-side/First_steps
+30. https://getbootstrap.com/docs/5.3/getting-started/introduction/
+31. https://getbootstrap.com/docs/5.3/forms/overview/
+32. https://getbootstrap.com/docs/5.3/components/navbar/
+33. https://www.w3schools.com/sql/
+34. https://www.w3schools.com/python/
+35. https://stackoverflow.com/questions/tagged/flask
+"""
 from flask import Flask, flash, redirect, render_template, request, session
 from hashlib import pbkdf2_hmac
 import os
